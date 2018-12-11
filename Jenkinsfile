@@ -1,4 +1,4 @@
 @Library(['github.com/thoughtexperimentnepal/Jenkins-Class-Library@dev']) _
-gitCheckout {
+checkout_build {
     regions = "NA,CN"
 }
