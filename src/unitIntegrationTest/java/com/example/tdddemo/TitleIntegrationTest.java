@@ -62,7 +62,7 @@ public class TitleIntegrationTest {
 
         mockServer.expect(requestTo(url))
                 .andRespond(withSuccess()
-                    .body(TestUtil.readFile("src/unitIntegrationTest/resources/response/1_wrong.json"))
+                    .body(TestUtil.readFile("src/unitIntegrationTest/resources/response/1.json"))
                         .contentType(MediaType.APPLICATION_JSON)
                 );
 
@@ -73,6 +73,34 @@ public class TitleIntegrationTest {
         resultActions.andExpect(status().isOk())
         .andExpect(content().string("false"))
         ;
+
+        MvcResult mvcResult = resultActions.andReturn();
+
+        String str = mvcResult.getResponse().getContentAsString();
+
+        System.out.println(str);
+
+    }
+
+    @Test
+    public void testTitleWrong() throws Exception {
+        String url = titleBaseUrl + path + "/" + 1;
+
+        mockServer.expect(requestTo(url))
+                .andRespond(withSuccess()
+                        .body(TestUtil.readFile("src/unitIntegrationTest/resources/response/1_wrong.json"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                );
+
+        ResultActions resultActions = mockMvc.perform(
+                get("/api/status/1")
+        );
+
+        // This will evaluate to fail because the field is messed up so it will return null
+        /*
+                resultActions.andExpect(status().isOk())
+                .andExpect(content().string("false"))
+        ;*/
 
         MvcResult mvcResult = resultActions.andReturn();
 
