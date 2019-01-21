@@ -10,10 +10,12 @@ buildscript {
 	}
 }
 
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
@@ -24,7 +26,32 @@ repositories {
 }
 
 
+
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
+
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
+
+sourceSets {
+	integrationTest {
+		java {
+			compileClasspath += main.output + test.output
+			runtimeClasspath += main.output + test.output
+			srcDir file('src/unitIntegrationTest/java')
+		}
+		resources.srcDir file('src/unitIntegrationTest/resources')
+	}
+}
+
+configurations {
+	integrationTestCompile.extendsFrom testCompile
+	integrationTestRuntime.extendsFrom testRuntime
+}
+
+task integrationTest(type: Test) {
+	testClassesDirs = sourceSets.integrationTest.output.classesDirs
+	classpath = sourceSets.integrationTest.runtimeClasspath
+}
+
+
